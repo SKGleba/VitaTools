@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system_settings plugin="system_settings_plugin" version="1.0" back_button_color="20.0, 1.0, 5.0, 1.0">
+
+  <setting_list id="id_frdr"
+                title="Format storage">
+    <list id="id_frdr_stor" 
+          key="/CONFIG/FRDR/target"
+		  icon="tex_spanner"
+          title="Target">
+      <list_item id="id_frdr_gcsd" title="SD2Vita" value="0"/>
+      <list_item id="id_frdr_usb5" title="PSVSD" value="1"/>
+	  <list_item id="id_frdr_usb0" title="USB" value="2"/>
+	  <list_item id="id_frdr_xint" title="Internal MC" value="3"/>
+	  <list_item id="id_frdr_xext" title="External MC" value="4"/>
+    </list>
+    <list id="id_frdr_cop" 
+            key="/CONFIG/FRDR/fstype"
+			icon="tex_spanner"
+            title="Filesystem">
+		<list_item id="id_frdr_tex" title="TexFAT" value="7"/>
+		<list_item id="id_frdr_f16" title="FAT16" value="6"/>
+		<list_item id="id_frdr_f32" title="FAT32" value="5"/>
+    </list>
+	<button id="id_frdr_format"
+            title="Format target storage"
+            success_dialog_message="Formatted, please reboot"
+            error_dialog_message="Format failed, please reboot"/>
+	<button id="id_frdr_reboot"
+            title="Reboot the device"
+            success_dialog_message="K"
+            error_dialog_message="Bruh"/>
+  </setting_list>
+
+</system_settings>

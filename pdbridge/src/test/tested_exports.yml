@@ -1,0 +1,16 @@
+modules:
+  scePdDisplayOledModule:
+    nid: 0x713501D4
+    libraries:
+      ScePdDisplayOled:
+        kernel: false
+        nid: 0x9AFC6E88
+        functions:
+          scePdOledOff: 0x38E4DA63
+          scePdOledSetBrightness: 0x71013BBF
+          scePdOledSetGPIOState: 0x8070313C
+          scePdOledResetSPI: 0x9CEC0861
+          scePdOledOn: 0xAE602E1E
+          ScePdDisplayOled_2C4D117E_get_buf: 0x2C4D117E
+          ScePdDisplayOled_9218ED1B_set_buf: 0x9218ED1B
+          ScePdDisplayOled_BFA0B350_some_dark_mode: 0xBFA0B350
