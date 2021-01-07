@@ -342,6 +342,7 @@ int module_start(SceSize argc, const void *args)
 		ksceKernelAllocMemBlock("workfs_buf", 0x1020D006, 0x1000000, NULL), 
 		(void**)&fsp_buf
 	);
+	ksceIoMount(0x100, NULL, 0, 0, 0, 0); // Fix for GC-SD not mounting at boot
 	patch_vstor(); // prepare the vstor module
 	ksceUdcdStopCurrentInternal(2); // make sure USB2 (main) is not used
 	vstor_stop(); // this should error out after the prev func
