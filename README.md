@@ -32,5 +32,11 @@
 - pd_test can be used to test pdbridge as well as PdDisplayOled.
 - Tested on firmware 3.65 with 0syscall6.
 
+### bgvpk
+- background vpk downloader and installer
+- based on download_enabler by TheFlow
+- can be included in both hb apps and tai config
+- Tested on firmware 3.65, should work on 3.60-3.73
+
 ### Notes
 - All tools are licensed under MIT unless stated otherwise.
