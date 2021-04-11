@@ -153,7 +153,7 @@ int init_download_class(scedownload_class* class) {
     return res;
 }
 
-int scedownload_start(scedownload_class* class, const char* title, const char* url, int* bgdlid) {
+int scedownload_start(scedownload_class* class, const char* title, const char* url, const char* icon, int* bgdlid) {
     uint32_t result = 1;
     *bgdlid = 1;
 
@@ -182,7 +182,12 @@ int scedownload_start(scedownload_class* class, const char* title, const char* u
     params.shell_func_8 = (*(class->class_header->func_table))[8];
 
     strcpy((char*)params.init.addr_DC0->url, url);
-    strcpy((char*)params.init.addr_DC0->title, title);
+    if (title)
+        strcpy((char*)params.init.addr_DC0->title, title);
+    else
+        strcpy((char*)params.init.addr_DC0->title, "background download");
+    if (icon)
+        strcpy((char*)params.init.addr_DC0->icon_path, icon);
 
     params.init.addr_DC0->type[0] = params.init.addr_DC0->type[1] = 1;
 
@@ -221,8 +226,8 @@ int bgdl_init() {
     return init_download_class(&some_class);
 }
 
-// Queue a BG DL of [url] with title [title], returns bgdlid on success 
-int bgdl_queue(const char *title, const char *url) {
+// Queue a BG DL of [url] with title [title] and dl icon from [icon_path], returns bgdlid on success 
+int bgdl_queue(const char *title, const char *url, const char *icon_path) {
     int bgdlid = 0;
-    return scedownload_start(&some_class, title, url, &bgdlid);
+    return scedownload_start(&some_class, title, url, icon_path, &bgdlid);
 }

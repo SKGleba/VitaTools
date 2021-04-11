@@ -1,3 +1,5 @@
+// Thanks to theflow0 for vitashell
+
 #include <psp2/promoterutil.h>
 #include <psp2/sysmodule.h>
 #include "sha1.h"

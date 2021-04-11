@@ -1,3 +1,5 @@
+// Based on download_enabler by theflow0
+
 #include <psp2/io/dirent.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/kernel/clib.h>

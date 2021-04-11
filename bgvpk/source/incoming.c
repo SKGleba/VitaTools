@@ -1,3 +1,5 @@
+// thanks to AltCtrlGraphene for incoming dialog PoC
+
 typedef struct SceIncomingDialogParam {
     int fw; //ex. 0x1650041
     char titleid[0x10]; //ex. "PCSA00044" (icon0.png of that app will be shown in dialog window)

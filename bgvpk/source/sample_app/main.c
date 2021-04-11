@@ -65,26 +65,30 @@ int main(int argc, char **argv){
 	psvDebugScreenPrintf("bgdl_init: %x\n", res);
 	
 	// download VPK and ask user to install or save
-	res = bgdl_queue("Vita Save Manager", "http://hen.13375384.xyz/vpk/savemgr.vpk");
+	res = bgdl_queue("Vita Save Manager", "http://hen.13375384.xyz/vpk/savemgr.vpk", NULL);
 	psvDebugScreenPrintf("0: start download with ID %X\n", res);
 	
 	// download VPK and install in the BG
-	res = bgdl_queue("Registry Editor", "http://hen.13375384.xyz/vpk/reg.vpk");
+	res = bgdl_queue("Registry Editor", "http://hen.13375384.xyz/vpk/reg.vpk", NULL);
 	if (res >= 0)
 		res = add_bgvpk_params(res, 0, 1, NULL);
 	psvDebugScreenPrintf("1: start download with ID %X\n", res);
 	
 	// download zip and extract to ux0:data
-	res = bgdl_queue("Vanilla taiHEN configuration", "http://hen.13375384.xyz/tai/v_tai.zip");
+	res = bgdl_queue("Vanilla taiHEN configuration", "http://hen.13375384.xyz/tai/v_tai.zip", NULL);
 	if (res >= 0)
 		res = add_bgvpk_params(res, 0, 0, NULL);
 	psvDebugScreenPrintf("2: start download with ID %X\n", res);
 	
 	// download VPK and ask user to install or save (custom callerID - Content Manager)
-	res = bgdl_queue("batteryFixer", "http://hen.13375384.xyz/vpk/battery.vpk");
+	res = bgdl_queue("batteryFixer", "http://hen.13375384.xyz/vpk/battery.vpk", NULL);
 	if (res >= 0)
 		res = add_bgvpk_params(res, 1, 1, "NPXS10026");
 	psvDebugScreenPrintf("3: start download with ID %X\n", res);
+	
+	// download VPK and ask user to install or save - custom download icon
+	res = bgdl_queue("PSVIdent", "http://hen.13375384.xyz/vpk/ident.vpk", APP_PATH "sample_icon.png");
+	psvDebugScreenPrintf("4: start download with ID %X\n", res);
 	
 	// while(1){};
 	
