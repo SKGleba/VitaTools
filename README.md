@@ -41,6 +41,7 @@
 ### fakegc
 - removes gc checks from the gro0: partition (can run any app)
 - put the app files in gro0:app/TITLEID/ and copy param.sfo to gro0:gc/
+  - retail games need to be decrypted first
 - put fakegc.suprx under *main in taiHen's config.txt
 - the provided kernel plugin will mount sd2vita to both gro0: and grw0:
   - compatible with YAMT's full version too
