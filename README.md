@@ -38,5 +38,14 @@
 - can be included in both hb apps and tai config
 - Tested on firmware 3.65, should work on 3.60-3.73
 
+### fakegc
+- removes gc checks from the gro0: partition (can run any app)
+- put the app files in gro0:app/TITLEID/ and copy param.sfo to gro0:gc/
+- put fakegc.suprx under *main in taiHen's config.txt
+- the provided kernel plugin will mount sd2vita to both gro0: and grw0:
+  - compatible with YAMT's full version too
+- you can redirect ux0:data/ to grw0:reData/ with (rePatch)[https://github.com/SonicMastr/rePatch-reLoaded]
+- Tested on firmwares 3.60 and 3.65
+
 ### Notes
 - All tools are licensed under MIT unless stated otherwise.
