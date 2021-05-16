@@ -44,7 +44,7 @@
 - put fakegc.suprx under *main in taiHen's config.txt
 - the provided kernel plugin will mount sd2vita to both gro0: and grw0:
   - compatible with YAMT's full version too
-- you can redirect ux0:data/ to grw0:reData/ with (rePatch)[https://github.com/SonicMastr/rePatch-reLoaded]
+- you can redirect ux0:data/ to grw0:reData/ with [rePatch](https://github.com/SonicMastr/rePatch-reLoaded)
 - Tested on firmwares 3.60 and 3.65
 
 ### Notes
