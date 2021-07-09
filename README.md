@@ -49,5 +49,15 @@
   - if the game crashes you will need to recompile it with the new path
 - Tested on firmwares 3.60 and 3.65
 
+### vita-bootanim
+- bootanimations plugin for enso
+- convert gifs to rcf using the tool in /pc/ (linux-only atm)
+  - ImageMagick and gzip required
+  - run "mkanim -help" to get the list of available commands
+  - put boot.rcf in ur0:tai/
+- faulty animations can be skipped by holding LTrigger
+  - try setting a lower priority and optimizing the animation
+- Tested on firmware 3.65, should work on enso 3.60-3.73
+
 ### Notes
 - All tools are licensed under MIT unless stated otherwise.
