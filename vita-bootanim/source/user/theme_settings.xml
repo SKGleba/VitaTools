@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system_settings version="1.0" plugin="theme_settings_plugin">
+
+  <!-- テーマ＆背景 -->
+  <setting_list id="theme_settings" title="msg_theme_background">
+
+    <!-- テーマ -->
+    <setting_list id="setting_list_custom_themes" icon="tex_spanner" title="msg_theme">
+      <user_custom id="user_custom_custom_themes"/>
+    </setting_list>
+	
+    <setting_list id="setting_list_custom_bootanim" icon="tex_spanner" title="Boot Animation">
+      <toggle_switch id="enable_vbanim"
+                     key="/CONFIG/VBANIM/enbld"
+                     title="Use vita-bootanim"
+				             description="Enables the vita-bootanim plugin"/>
+      <toggle_switch id="vbanim_loopa"
+                     key="/CONFIG/VBANIM/loopa"
+                     title="Enable animation loop"/>
+      <toggle_switch id="vbanim_cache"
+                     key="/CONFIG/VBANIM/cache"
+                     title="Enable FB caching"
+				             description="Waay faster but will have cache artifacts"/>
+      <toggle_switch id="vbanim_sweep"
+                     key="/CONFIG/VBANIM/sweep"
+                     title="Clean FB cache after every frame"
+				             description="Fixes most of the cache artifacts at a reasonable performance cost"/>
+      <toggle_switch id="vbanim_sram"
+                     key="/CONFIG/VBANIM/rsram"
+                     title="Restrict to SRAM"
+				             description="Keep the animation FB in SRAM, last frame stays until warning"/>
+      <toggle_switch id="vbanim_blank"
+                     key="/CONFIG/VBANIM/blank"
+                     title="Wait for vblank"
+				             description="Wait for VBI before drawing the next frame"/>
+      <toggle_switch id="vbanim_swpfb"
+                     key="/CONFIG/VBANIM/swpfb"
+                     title="Dual Buffering"
+				             description="(useless atm) Swap between the draw/display framebuffers"/>
+      <list id="id_vba_prirt" 
+          key="/CONFIG/VBANIM/prirt"
+          title="Priority">
+        <list_item id="id_vba_prirt_0" title="oof" value="0"/>
+	      <list_item id="id_vba_prirt_1" title="high" value="1"/>
+	      <list_item id="id_vba_prirt_4" title="medium" value="4"/>
+	      <list_item id="id_vba_prirt_ht" title="low" value="16"/>
+        <list_item id="id_vba_prirt_other" title="other" value="2"/>
+      </list>
+    </setting_list>
+
+    <!-- スタート画面 -->
+    <setting_list id="setting_list_start_screen" title="msg_start_screen">
+      <user_custom id="user_custom_start_screen"/>
+    </setting_list>
+
+    <!-- ホーム画面の背景 -->
+    <setting_list id="setting_list_home_screen" title="msg_home_screen_backgrounds">
+      <user_custom id="user_custom_home_screen"/>
+    </setting_list>
+
+  </setting_list>
+
+  <!-- テーマ 詳細 -->
+  <setting_list id="setting_list_custom_theme_detail" title="">
+    <user_custom id="user_custom_custom_theme_detail"/>
+  </setting_list>
+
+  <!-- テーマ 情報 -->
+  <setting_list id="setting_list_custom_theme_information" title="" style="edit">
+    <user_custom id="user_custom_custom_theme_information"/>
+    <label id="label_custom_theme_information_name" title="msg_name" />
+    <label id="label_custom_theme_information_provider" title="msg_provider" />
+		<label id="label_custom_theme_information_updated" title="msg_updated" />
+		<label id="label_custom_theme_information_size" title="msg_size" />
+		<label id="label_custom_theme_information_version" title="msg_version" />
+  </setting_list>
+
+  <!-- スタート画面 確認 -->
+  <setting_list id="setting_list_start_screen_confirm" title="">
+    <user_custom id="user_custom_start_screen_confirm"/>
+  </setting_list>
+
+</system_settings>

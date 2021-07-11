@@ -20,7 +20,6 @@ int main(int argc, char** argv) {
     char* end_logo = NULL;
     animation_header header;
     memset(&header, 0, sizeof(animation_header));
-    header.priority = 0xFF;
     header.anim_w = 960;
     header.anim_h = 544;
     int compression = 6;
@@ -55,7 +54,7 @@ int main(int argc, char** argv) {
                 printf(" -height X : sets animation height to X\n"); 
                 printf(" -width X : sets animation width to X\n"); 
                 printf(" -logo X : replaces default logo with X\n");
-                printf(" -priority X : sets thread priority to X (lower=less bootloop risk)\n");
+                printf(" -priority X : sets thread priority to X (higher X=lower priority=less bootloop risk)\n");
                 printf(" -compression X : sets compression level to X (lower=faster)\n");
                 printf(" -cache_fb : enable caching (faster, more artifacts)\n");
                 printf(" -wipe_cache : clean cache after every frame (slower, less artifacts)\n");
@@ -64,7 +63,7 @@ int main(int argc, char** argv) {
                 printf(" -sram : stay in camera SRAM (not compatible with swap_fb and logo)\n");
                 printf(" -loop : loop animation until boot is finished\n");
                 printf("example: ./mkanim -width 512 -height 272 -logo big.png -cache_fb -swap_fb -wipe_cache -priority 1\n");
-                printf("supported res: 960x544, 720x408, 640x368 and 512x272 (only 480x272 mapped!)\n");
+                printf("supported res: 960x544, 768x408 (only 720x408 mapped!), 640x368 and 512x272 (only 480x272 mapped!)\n");
                 return 0;
             }
         }

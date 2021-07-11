@@ -54,9 +54,11 @@
 - convert gifs to rcf using the tool in /pc/ (linux-only atm)
   - ImageMagick and gzip required
   - run "mkanim -help" to get the list of available commands
+  - max animation size: 108MiB
   - put boot.rcf in ur0:tai/
 - faulty animations can be skipped by holding LTrigger
   - try setting a lower priority and optimizing the animation
+- you can configure the boot animation in "settings->theme & background"
 - Tested on firmware 3.65, should work on enso 3.60-3.73
 
 ### Notes

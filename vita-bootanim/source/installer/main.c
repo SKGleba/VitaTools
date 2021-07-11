@@ -118,12 +118,46 @@ int installVBAnimB() {
 	return 0;
 }
 
+int installVBAnimC() {
+	long psz;
+	FILE* fp = fopen("ur0:tai/config.txt", "rb");
+	fseek(fp, 0, SEEK_END);
+	psz = ftell(fp);
+	rewind(fp);
+	char* pbf = (char*)malloc(sizeof(char) * psz);
+	fread(pbf, sizeof(char), (size_t)psz, fp);
+	fclose(fp);
+	sceIoRename("ur0:tai/config.txt", "ur0:tai/config.txt_prevba");
+
+	FILE* pFile = fopen("ur0:tai/config.txt", "wb");
+	char* pkx = strstr(pbf, "# VBANIM\n");
+	char* pzx = strstr(pbf, "ur0:tai/vbanim.suprx\n");
+	if (!pkx || !pzx) {
+		const char* patch1 =
+			"# VBANIM\n*NPXS10015\nur0:tai/vbanim.suprx\n\n";
+		fwrite(patch1, 1, strlen(patch1), pFile);
+	}
+
+	fwrite(pbf, 1, psz, pFile);
+	fclose(pFile);
+	free(pbf);
+}
+
 void copyVBAnim(void) {
 		psvDebugScreenSetFgColor(COLOR_WHITE);
-		printf("copying the vbanim module... ");
+		printf("copying the vbanim modules... ");
 		fcp("app0:vbanim.skprx", "ur0:tai/vbanim.skprx");
+		fcp("app0:vbanim.suprx", "ur0:tai/vbanim.suprx");
 		printf("ok!\nadding psp2 config lines... ");
 		if (installVBAnimB() < 0) {
+			psvDebugScreenSetFgColor(COLOR_RED);
+			printf("failed...\n ");
+			sceKernelDelayThread(4 * 1000 * 1000);
+			sceKernelExitProcess(0);
+			return;
+		}
+		printf("ok!\nadding tai config lines... ");
+		if (installVBAnimC() < 0) {
 			psvDebugScreenSetFgColor(COLOR_RED);
 			printf("failed...\n ");
 			sceKernelDelayThread(4 * 1000 * 1000);
@@ -136,19 +170,20 @@ void copyVBAnim(void) {
 
 void removeVBAnim() {
 	psvDebugScreenSetFgColor(COLOR_WHITE);
-	printf("removing the VBAnim module... ");
+	printf("removing the VBAnim modules... ");
 	sceIoRemove("ur0:tai/vbanim.skprx");
+	sceIoRemove("ur0:tai/vbanim.suprx");
 	printf("ok!\n");
 }
 
-char mmit[][256] = {" -> Install vita-bootanim"," -> Install the default animation"," -> Uninstall vita-bootanim"," -> Exit"};
+char mmit[][256] = { " -> Install vita-bootanim"," -> Install the default animation"," -> Uninstall vita-bootanim"," -> Exit" };
 int sel = 0;
 int optct = 4;
 
 void smenu(){
 	psvDebugScreenClear(COLOR_BLACK);
 	psvDebugScreenSetFgColor(COLOR_CYAN);
-	printf("                vita-bootanim installer v1.0                     \n");
+	printf("                vita-bootanim installer v1.1                     \n");
 	printf("                         By SKGleba                              \n");
 	psvDebugScreenSetFgColor(COLOR_RED);
 	for(int i = 0; i < optct; i++){

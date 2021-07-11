@@ -40,6 +40,7 @@ target_link_libraries(${SHORT_NAME}
   SceSysmodule_stub
   SceVshBridge_stub
   SceCtrl_stub
+  SceAppMgr_stub
 )
 
 vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE)
@@ -48,6 +49,7 @@ vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
   VERSION ${VITA_VERSION}
   NAME ${VITA_APP_NAME}
   FILE ${CMAKE_BINARY_DIR}/kernel/vbanim.skprx vbanim.skprx
+  FILE ${CMAKE_BINARY_DIR}/user/vbanim.suprx vbanim.suprx
   FILE ${CMAKE_BINARY_DIR}/res/boot.rcf boot.rcf
   FILE ${CMAKE_BINARY_DIR}/res/icon0.png sce_sys/icon0.png
   FILE ${CMAKE_BINARY_DIR}/res/template.xml sce_sys/livearea/contents/template.xml
