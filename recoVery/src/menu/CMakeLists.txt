@@ -39,6 +39,7 @@ target_link_libraries(recovery.elf
 	SceGpioForDriver_stub
 	SceDisplayForDriver_stub
 	SceDebugForDriver_stub
+	SceSysconForDriver_stub
 )
 
 set_target_properties(recovery.elf

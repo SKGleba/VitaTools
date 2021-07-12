@@ -36,17 +36,17 @@ typedef struct {
 } __attribute__((packed)) master_block_t;
 
 static char *mpath = NULL; // currently mounted path
-int select = 1, menusize = 0;
 static int (*vstor_gpx)(void) = NULL;
 static uint8_t npo[2] = {0x35, 0xe0};
 static int (*vstor_stop)(void) = NULL;
 static int (*vstor_start)(int mode) = NULL;
 static char custom_mpath[64], custom_cmd[4]; // user configs
+int select = 1, menusize = 0, g_rwl = SCE_O_RDWR, dispOff = 0;
 static int (*vstor_setimgp)(const char *img) = NULL;
 static uint8_t vstor_ret_2[] = {0x02, 0x20, 0xf3, 0xe7};
 static void *fsp_buf = NULL, *vstor_params_table = NULL;
 static int (*vstor_setdescr)(const char *name0, const char *name1) = NULL;
-const char menu[8][20] = {"Mount GC-SD", "Mount user", "Mount os", "Mount vsh", "Mount custom", "Other command", "Load supply.skprx", "Hard exit"};
+const char menu[9][20] = {"Mount GC-SD", "Mount user", "Mount os", "Mount vsh", "Mount custom", "Other command", "Load supply.skprx", "Exit recoVery", ""};
 
 // fixed storage params gen with exfat & small partitions support
 int custom_vstor_gpx(void) {
@@ -56,7 +56,7 @@ int custom_vstor_gpx(void) {
 		return ret;
 	DBG("c_gpx open %s\n", mpath);
 	int permz = ksceKernelSetPermission(0x40);
-	int fd = ksceIoOpen(mpath, SCE_O_RDWR, 0777);
+	int fd = ksceIoOpen(mpath, g_rwl, 0777);
 	if (fd < 0)
 		goto ded;
 	*(uint32_t *)(vstor_params_table + 0xc) = fd;
@@ -70,7 +70,10 @@ int custom_vstor_gpx(void) {
 	*(uint32_t *)(vstor_params_table + 0x50) = (uint16_t)0x200;
 	if (memcmp(mbr + 0x3, "EXFAT", 5) == 0) { // ExFAT device
 		DBG("c_gpx set mode exfat\n");
-		*(uint32_t *)(vstor_params_table + 0x10) = *(uint32_t *)(mbr + 0x48);
+		*(uint32_t*)(vstor_params_table + 0x10) = *(uint32_t*)(mbr + 0x48);
+	} else if (memcmp(mbr, "Sony Computer Entertainment Inc.", 0x20) == 0) {
+		DBG("c_gpx set mode sce\n");
+		*(uint32_t*)(vstor_params_table + 0x10) = *(uint32_t*)(mbr + 0x24);
     } else {
 		DBG("c_gpx set mode fat16\n");
 		if (*(uint32_t *)(mbr + 0x20) > 0) // Use big sectors
@@ -217,21 +220,27 @@ static void handle_ccmd() {
 	return;
 }
 
-// it will DABT
-static void power_ic_reboot() {
+// hard reset
+static void reset(int bic) {
 	DBG("requested death...\n");
 	int *(* sc_call)() = NULL;
-	int sysmem_ln = ksceKernelSearchModuleByName("SceSysmem");
-	module_get_offset(KERNEL_PID, sysmem_ln, 0, 0x30C9, (uintptr_t *)&sc_call);
-	sc_call(0, 0x888, 2);
-	sc_call(0, 0x989, 1);
+	int syscon_ln = ksceKernelSearchModuleByName("SceSyscon");
+	module_get_offset(KERNEL_PID, syscon_ln, 0, (bic) ? 0x30C9 : 1, (uintptr_t *)&sc_call);
+	if (bic) {
+		sc_call(0, 0x888, 2);
+		sc_call(0, 0x989, 1);
+	} else
+		sc_call(2, 0, 0);
 }
 
 // commands handler
-int do_work(int cmd) {
-	DBG("cmd_handler got req 0x%X\n", cmd);
+int do_work(int cmd, int rw) {
+	DBG("cmd_handler got req 0x%X(%d)\n", cmd, rw);
+	g_rwl = (rw) ? SCE_O_RDWR : SCE_O_RDONLY;
+	ksceSdifReadSectorMmc((void *)0xCAFEBABE, -1, NULL, 0);
+	ksceSdifWriteSectorMmc((void *)0xCAFEBABE, -1, NULL, 0);
 	int exit = 0;
-	switch(select) {
+	switch(cmd) {
 		case 1:
 			SWAP_MPATH("sdstor0:ext-lp-ign-entire");
 			break;
@@ -262,7 +271,20 @@ int do_work(int cmd) {
 		case 8:
 			ksceIoSync(mpath, 0);
 			vstor_stop();
-			power_ic_reboot();
+			if (rw)
+				reset(0);
+			else
+				reset(1);
+			exit = 1;
+			break;
+		case 9:
+			ksceSdifReadSectorMmc((void*)0xCAFEBABE, -1, NULL, 1);
+			if (rw == 2) {
+				ksceSdifWriteSectorMmc((void*)0xCAFEBABE, -1, NULL, 1);
+				DBG("WARNING: FULL RW PERMS\n");
+			}
+			SWAP_MPATH("sdstor0:int-lp-act-entire");
+			break;
 		default:
 			exit = 1;
 			break;
@@ -274,11 +296,37 @@ int do_work(int cmd) {
 void drawScreen() {
 	blit_set_color(0x00000000, 0x00000000);
 	for	(int i = 1; i <= menusize; i++)	
-		blit_stringf((strlen(menu[i - 1]) + 2) * 16, i * 20 + 80, "<");
+		blit_stringf((strlen(menu[i - 1]) + 2) * 16, i * 20 + 80, (i == 9) ? ">Mount EMMC" : "<");
+	blit_stringf(36 * 16, 50, " ########### ");
+	blit_stringf(36 * 16, 70, "  #       #  ");
+	blit_stringf(36 * 16, 90, "   #     #   ");
+	blit_stringf(36 * 16, 110, "    #   #    ");
+	blit_stringf(36 * 16, 130, "     # #     ");
+	blit_stringf(36 * 16, 150, "      #    WARNING:");
+	blit_stringf(36 * 16, 170, "             ");
+	blit_stringf(36 * 16, 190, "      #      ");
+	blit_stringf(36 * 16, 210, "     # #     ");
+	blit_stringf(36 * 16, 230, "      #      ");
+	blit_stringf((36 * 16) + (12 * 16), 170, " WRITABLE");
 	blit_set_color(0x0000ffff, 0x00000000);
-	blit_stringf((strlen(menu[select - 1]) + 2) * 16, select * 20 + 80, "<");
+	blit_stringf((strlen(menu[select - 1]) + 2) * 16, select * 20 + 80, (select == 9) ? ">Mount EMMC" : "<");
+	if (g_rwl == SCE_O_RDWR)
+		blit_stringf((36 * 16) + (12 * 16), 170, " WRITABLE");
 	blit_set_color(0x00ff00ff, 0x00000000);
 	blit_stringf(20, 280, "mp: %s             ", mpath);
+	if (g_rwl == SCE_O_RDWR) {
+		blit_set_color(0x000000ff, 0x00000000);
+		blit_stringf(36 * 16, 50, " ########### ");
+		blit_stringf(36 * 16, 70, "  #       #  ");
+		blit_stringf(36 * 16, 90, "   #     #   ");
+		blit_stringf(36 * 16, 110, "    #   #    ");
+		blit_stringf(36 * 16, 130, "     # #     ");
+		blit_stringf(36 * 16, 150, "      #    WARNING:");
+		blit_stringf(36 * 16, 170, "             ");
+		blit_stringf(36 * 16, 190, "      #      ");
+		blit_stringf(36 * 16, 210, "     # #     ");
+		blit_stringf(36 * 16, 230, "      #      ");
+	}
 	blit_set_color(0x00ffffff, 0x00000000);
 }
 
@@ -301,9 +349,9 @@ static void lookdog(void) {
 	blit_set_frame_buf(&fb);
 	ksceDisplaySetFrameBuf(&fb, 1);
 	blit_set_color(0x00ffff00, 0x00000000);
-	blit_stringf(20, 20, "PSP2 recovery for test image");
-	blit_stringf(20, 40, "||||||||||||||||||||||||||||");
-	blit_stringf(20, 60, "VVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+	blit_stringf(20, 20, "recoVery v1.02 by SKGleba");
+	blit_stringf(20, 40, "|||||||||||||||||||||||||");
+	blit_stringf(20, 60, "VVVVVVVVVVVVVVVVVVVVVVVVV");
 	blit_set_color(0x00ffffff, 0x00000000);
 	menusize = sizeof(menu) / sizeof(menu[0]);
 	for (int i = 0; i < menusize; i++)
@@ -317,7 +365,7 @@ static void lookdog(void) {
 		if (ctrl_press.buttons == SCE_CTRL_UP) {
 			select = select - 1;
 			if (select < 1)
-				select = menusize;
+				select = menusize - 1;
 			drawScreen();
 		} else if (ctrl_press.buttons == SCE_CTRL_DOWN) {
 			select = select + 1;
@@ -325,9 +373,20 @@ static void lookdog(void) {
 				select = 1;
 			drawScreen();
 		} else if (ctrl_press.buttons == SCE_CTRL_CROSS) {
-			if (do_work(select))
+			if (do_work(select, 1))
 				break;
 			drawScreen();
+		} else if (ctrl_press.buttons == SCE_CTRL_CIRCLE) {
+			if (do_work(select, 0))
+				break;
+			drawScreen();
+		} else if (ctrl_press.buttons == SCE_CTRL_TRIANGLE) {
+			if (do_work(select, 2))
+				break;
+			drawScreen();
+		} else if (ctrl_press.buttons == SCE_CTRL_PSBUTTON) {
+			kscePowerRequestDisplayOff();
+			drawScreen(); // bypass system hang
 		}
 		ksceKernelDelayThread(100 * 1000);
 	}
@@ -346,7 +405,7 @@ int module_start(SceSize argc, const void *args)
 	patch_vstor(); // prepare the vstor module
 	ksceUdcdStopCurrentInternal(2); // make sure USB2 (main) is not used
 	vstor_stop(); // this should error out after the prev func
-	vstor_setdescr("\"PS Vita\" EX", "4.20"); // set our fancy device descriptor
+	vstor_setdescr("\"PS Vita\" rV", "1.02"); // set our fancy device descriptor
 	mpath = "sdstor0:ext-lp-ign-entire"; // first usbmount the GC-SD
 	vstor_setimgp(mpath);
 	vstor_start(0); // start share
