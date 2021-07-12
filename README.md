@@ -20,7 +20,7 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 
 - background vpk downloader and installer
 - based on download_enabler by TheFlow
-- can be included in both hb apps and tai config
+- can be included in both hb apps and tai config under *main
 - Tested on firmware 3.65, should work on 3.60-3.73
 
 ### fakegc
