@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #include "../kernel/vita-bootanim.h"
 
@@ -62,17 +63,30 @@ int main(int argc, char** argv) {
                 printf(" -swap_fb : swap between two framebuffers (?slower?, less artifacts)\n");
                 printf(" -sram : stay in camera SRAM (not compatible with swap_fb and logo)\n");
                 printf(" -loop : loop animation until boot is finished\n");
-                printf("example: ./mkanim -width 512 -height 272 -logo big.png -cache_fb -swap_fb -wipe_cache -priority 1\n");
+                printf("example: %s -width 512 -height 272 -logo big.png -cache_fb -swap_fb -wipe_cache -priority 1\n", argv[0]);
                 printf("supported res: 960x544, 768x408 (only 720x408 mapped!), 640x368 and 512x272 (only 480x272 mapped!)\n");
                 return 0;
             }
         }
+    }
+
+    if (!getSz("boot_animation.gif")) {
+        printf("ERROR: could not find boot_animation.gif!");
+        return 0;
     }
     
     unlink("boot.rcf");
     
     printf("converting boot_animation.gif to a supported gif type...\n");
     system("convert boot_animation.gif -coalesce boot.gif");
+
+    if (!getSz("boot.gif")) {
+        printf("ERROR: do you have ImageMagick and GZIP installed?\n");
+#ifdef WINDOWS
+        printf("https://download.imagemagick.org/ImageMagick/download/binaries/ImageMagick-7.1.0-4-Q8-x64-dll.exe\n - install the 'legacy convert' too\n");
+#endif
+    }
+
     printf("extracting gif frames...\n");
     system("convert boot.gif frame.png");
     unlink("boot.gif");
@@ -131,7 +145,11 @@ int main(int argc, char** argv) {
         fp = fopen("boot.rcf", "ab");
         fwrite(&frame_size, 4, 1, fp);
         fclose(fp);
+#ifdef WINDOWS
+        system("type end_logo.rgba.gz >> boot.rcf");
+#else
         system("cat end_logo.rgba.gz >> boot.rcf");
+#endif
         unlink("end_logo.rgba.gz");
     }
     for (int i = 0; i < header.frame_count; i -= -1) {
@@ -140,10 +158,17 @@ int main(int argc, char** argv) {
         fp = fopen("boot.rcf", "ab");
         fwrite(&frame_size, 4, 1, fp);
         fclose(fp);
+#ifdef WINDOWS
+        sprintf(command, "type %s >> boot.rcf", file_name);
+#else
         sprintf(command, "cat %s >> boot.rcf", file_name);
+#endif
         system(command);
         unlink(file_name);
     }
+
+    if (getSz("boot.rcf") < 0x20)
+        printf("CHECK ERROR: An error occured, do you have GZIP installed?\n");
     
     printf("all done!\n");
     return 0;
