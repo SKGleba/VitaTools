@@ -5,7 +5,7 @@
 https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-823d-12ac39f43f14.mp4
 
 - bootanimations plugin for enso
-- convert gifs to rcf using the tool in /pc/ (linux-only atm)
+- convert gifs to rcf using the tool in /pc/
   - ImageMagick and gzip required
   - run "mkanim -help" to get the list of available commands
   - max animation size: 108MiB
