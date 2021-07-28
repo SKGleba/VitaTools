@@ -55,12 +55,20 @@ https://user-images.githubusercontent.com/30833773/125277077-48303480-e311-11eb-
 ### storageFormat
 ![storageFormat](https://user-images.githubusercontent.com/30833773/125276383-719c9080-e310-11eb-9ebb-e5cd7a39a08b.png)
 
-
 - A tool that can format the desired storage to a desired filesystem.
 - SD2Vita, USB, PSVSD, External and Internal memory card supported.
 - Supported filesystems: FAT16, FAT32, TexFAT.
 - PSVSD/USB need to be mounted before using this tool.
 - Tested on firmwares: retail 3.60 and 3.65.
+
+### sa0tour0
+- Redirects sa0 to ur0
+- Useful for fonts, dictionary and handwriting data customization
+- The default system font is now ur0:data/font/pvf/ltn0.pvf
+- PVF is just a renamed OTF, PGF is a TTF with a custom header
+- Before installing this plugin copy all contents of sa0: over to ur0:
+- Put the plugin path in taihen config under *KERNEL
+- Tested on firmware 3.65, should work on 3.60-3.73
 
 ### mcfredir
 - Patches SceSettings to format SD2Vita instead of the memory card.
