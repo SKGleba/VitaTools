@@ -45,13 +45,6 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - Can load external sd0: helper kernel modules.
 - Kernel modules required firmware: 3.65.
 
-### vlog
-https://user-images.githubusercontent.com/30833773/125277077-48303480-e311-11eb-9255-f23087712666.mp4
-
-- Prints debug output on screen.
-- Remember to remove/change debug handlers before shell or safemode.
-- Tested on firmware 3.65.
-
 ### storageFormat
 ![storageFormat](https://user-images.githubusercontent.com/30833773/125276383-719c9080-e310-11eb-9ebb-e5cd7a39a08b.png)
 
@@ -61,6 +54,13 @@ https://user-images.githubusercontent.com/30833773/125277077-48303480-e311-11eb-
 - PSVSD/USB need to be mounted before using this tool.
 - Tested on firmwares: retail 3.60 and 3.65.
 
+### extuart0
+- Acquires uart0 to kermit.
+- This lets developers use multicn/microusb's uart output.
+- The plugin also sets an extra_uart flag in nvs (0x481).
+- Put the plugin path in taihen config under *KERNEL.
+- Tested on firmwares: retail 3.60, 3.65 and 3.74.
+
 ### sa0tour0
 - Redirects sa0 to ur0
 - Useful for fonts, dictionary and handwriting data customization
@@ -69,6 +69,13 @@ https://user-images.githubusercontent.com/30833773/125277077-48303480-e311-11eb-
 - Before installing this plugin copy all contents of sa0: over to ur0:
 - Put the plugin path in taihen config under *KERNEL
 - Tested on firmware 3.65, should work on 3.60-3.73
+
+### vlog
+https://user-images.githubusercontent.com/30833773/125277077-48303480-e311-11eb-9255-f23087712666.mp4
+
+- Prints debug output on screen.
+- Remember to remove/change debug handlers before shell or safemode.
+- Tested on firmware 3.65.
 
 ### mcfredir
 - Patches SceSettings to format SD2Vita instead of the memory card.
