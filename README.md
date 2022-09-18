@@ -1,7 +1,7 @@
 # VitaTools
 (Maybe) useful tools for PSP2 Vita and Dolce
 
-### vita-bootanim
+### [vita-bootanim](https://github.com/SKGleba/VitaTools/tree/main/vita-bootanim)
 https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-823d-12ac39f43f14.mp4
 
 - bootanimations plugin for enso
@@ -15,7 +15,7 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - you can configure the boot animation in "settings->theme & background"
 - Tested on firmware 3.65, should work on enso 3.60-3.73
 
-### bgvpk
+### [bgvpk](https://github.com/SKGleba/VitaTools/tree/main/bgvpk)
 ![bgvpk](https://user-images.githubusercontent.com/30833773/125277019-377fbe80-e311-11eb-9835-8a8a427213cd.png)
 
 - background vpk downloader and installer
@@ -23,7 +23,7 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - can be included in both hb apps and tai config under *main
 - Tested on firmware 3.65, should work on 3.60-3.73
 
-### fakegc
+### [fakegc](https://github.com/SKGleba/VitaTools/tree/main/fakegc)
 ![fakegc](https://user-images.githubusercontent.com/30833773/125277042-3ea6cc80-e311-11eb-83e7-6172d7b95c46.jpg)
 
 - removes gc checks from the gro0: partition (can run any app)
@@ -36,7 +36,7 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
   - if the game crashes you will need to recompile it with the new path
 - Tested on firmwares 3.60 and 3.65
 
-### recoVery
+### [recoVery](https://github.com/SKGleba/VitaTools/tree/main/recoVery)
 ![recoVery](https://user-images.githubusercontent.com/30833773/125277057-436b8080-e311-11eb-99b4-83c6bc066acb.jpg)
 
 - A proper gui recovery for the reset image, intended for enso_ex.
@@ -45,7 +45,7 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - Can load external sd0: helper kernel modules.
 - Kernel modules required firmware: 3.65.
 
-### storageFormat
+### [storageFormat](https://github.com/SKGleba/VitaTools/tree/main/storageFormat)
 ![storageFormat](https://user-images.githubusercontent.com/30833773/125276383-719c9080-e310-11eb-9ebb-e5cd7a39a08b.png)
 
 - A tool that can format the desired storage to a desired filesystem.
@@ -54,20 +54,20 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - PSVSD/USB need to be mounted before using this tool.
 - Tested on firmwares: retail 3.60 and 3.65.
 
-### extuart0
+### [extuart0](https://github.com/SKGleba/VitaTools/tree/main/extuart0)
 - Acquires uart0 to kermit.
 - This lets developers use multicn/microusb's uart output.
 - The plugin also sets an extra_uart flag in nvs (0x481).
 - Put the plugin path in taihen config under *KERNEL.
 - Tested on firmwares: retail 3.60, 3.65 and 3.74.
 
-### devdumper
+### [devdumper](https://github.com/SKGleba/VitaTools/tree/main/devdumper)
 - Dumps secure xbar, visible keyring, s/nvs, emmc, gc and mc.
 - I have provided a bunch of different prebuilt versions.
 - This kernel module does not require taihen.
 - Tested on firmware 3.65, should work on 3.60-3.74.
 
-### sa0tour0
+### [sa0tour0](https://github.com/SKGleba/VitaTools/tree/main/sa0tour0)
 - Redirects sa0 to ur0
 - Useful for fonts, dictionary and handwriting data customization
 - The default system font is now ur0:data/font/pvf/ltn0.pvf
@@ -76,20 +76,20 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - Put the plugin path in taihen config under *KERNEL
 - Tested on firmware 3.65, should work on 3.60-3.73.
 
-### vlog
+### [vlog](https://github.com/SKGleba/VitaTools/tree/main/vlog)
 https://user-images.githubusercontent.com/30833773/125277077-48303480-e311-11eb-9255-f23087712666.mp4
 
 - Prints debug output on screen.
 - Remember to remove/change debug handlers before shell or safemode.
 - Tested on firmware 3.65.
 
-### mcfredir
+### [mcfredir](https://github.com/SKGleba/VitaTools/tree/main/mcfredir)
 - Patches SceSettings to format SD2Vita instead of the memory card.
 - Redirects format popup at boot as well as the format option in settings.
 - Put in taihen config under *NPXS10015 (settings) and *NPXS10016 (popup)
 - Tested on firmwares: retail 3.60 and 3.65.
 
-### pdbridge
+### [pdbridge](https://github.com/SKGleba/VitaTools/tree/main/pdbridge)
 - A small kernel-user bridge to manage the diag modules.
 - Also sets some diag-checked dip switches.
 - pd_test can be used to test pdbridge as well as PdDisplayOled.
