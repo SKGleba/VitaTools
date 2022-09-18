@@ -1,7 +1,6 @@
 typedef unsigned short uint16_t;
 typedef unsigned int uint32_t;
 
-// Copy the framework and hook sm_load & fcmd_handle
 uint32_t _start(void) {
 	// disable icache
 	register volatile uint32_t cfg asm("cfg");
