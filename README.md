@@ -61,6 +61,12 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - Put the plugin path in taihen config under *KERNEL.
 - Tested on firmwares: retail 3.60, 3.65 and 3.74.
 
+### devdumper
+- Dumps secure xbar, visible keyring, s/nvs, emmc, gc and mc.
+- I have provided a bunch of different prebuilt versions.
+- This kernel module does not require taihen.
+- Tested on firmware 3.65, should work on 3.60-3.74.
+
 ### sa0tour0
 - Redirects sa0 to ur0
 - Useful for fonts, dictionary and handwriting data customization
@@ -68,7 +74,7 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - PVF is just a renamed OTF, PGF is a TTF with a custom header
 - Before installing this plugin copy all contents of sa0: over to ur0:
 - Put the plugin path in taihen config under *KERNEL
-- Tested on firmware 3.65, should work on 3.60-3.73
+- Tested on firmware 3.65, should work on 3.60-3.73.
 
 ### vlog
 https://user-images.githubusercontent.com/30833773/125277077-48303480-e311-11eb-9255-f23087712666.mp4
