@@ -27,6 +27,7 @@ target_link_libraries(devdump.elf
 	SceSdifForDriver_stub
 	SceMsifForDriver_stub
 	SceSysrootForKernel_stub
+	SceSblGcAuthMgrDrmBBForDriver_stub
 )
 
 set_target_properties(devdump.elf

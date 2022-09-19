@@ -85,3 +85,16 @@ int dump_sce_dev(int device, const char* dest, void* buf, uint32_t buf_sz_blocks
 
     return 0;
 }
+
+int dump_gc_drm_bb(const char* key_output_path) {
+    uint8_t buf[0x20];
+    memset(buf, 0, 0x20);
+    ksceGcAuthGetDrmBBKeypair(buf); // 0xBB70DDC0
+    ksceDebugPrintf("writing GcAuth DRM BB keypair to %s\n", key_output_path);
+    int fd = ksceIoOpen(key_output_path, SCE_O_WRONLY | SCE_O_TRUNC | SCE_O_CREAT, 0777);
+    if (fd < 0)
+        return -1;
+    ksceIoWrite(fd, buf, 0x20);
+    ksceIoClose(fd);
+    return 0;
+}

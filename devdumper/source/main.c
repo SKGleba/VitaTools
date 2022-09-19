@@ -29,6 +29,9 @@
 #define DUMP_GC
 #define GC_OUTPATH "gc.img"
 
+#define DUMP_GC_DRMBB
+#define GC_DRMBB_KEY_OUTPATH "gc-drmbb-key.bin"
+
 #define DUMP_MC
 #define MC_OUTPATH "mc.img"
 
@@ -68,6 +71,11 @@ int module_start(SceSize argc, const void *args)
 #endif
 
 #ifdef DUMP_GC
+#ifdef DUMP_GC_DRMBB
+	ksceDebugPrintf("[MAIN] will dump gc drm backbone auth key\n");
+	ret = dump_gc_drm_bb(DUMP_ROOT_PATH GC_DRMBB_KEY_OUTPATH);
+	ksceDebugPrintf("[MAIN] dump gc drmbb ret 0x%08X (%s)\n", ret, (ret < 0) ? "ERROR" : "OK");
+#endif
 	ksceDebugPrintf("[MAIN] will dump gc\n");
 	ret = dump_sce_dev(ksceSdifGetSdContextPartValidateMmc(1), DUMP_ROOT_PATH GC_OUTPATH, work_buffer, TEMP_MEMBLOCK_SIZE_BLOCKS, 0);
 	ksceDebugPrintf("[MAIN] dump gc ret 0x%08X (%s)\n", ret, (ret < 0) ? "ERROR" : "OK");
