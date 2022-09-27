@@ -10,10 +10,13 @@
 
 #define printf ksceDebugPrintf
 
+//#define USE_TOOL_RAM
+
 #define TEMP_MEMBLOCK_SIZE 0x1000000
 #define TEMP_MEMBLOCK_SIZE_BLOCKS (TEMP_MEMBLOCK_SIZE / 0x200)
 
 #define DUMP_ROOT_PATH "host0:"
+//#define DUMP_ROOT_PATH "ux0:data/"
 
 #define DUMP_F00D_STUFF
 #define KR_OUTPATH "kr.bin"
@@ -38,11 +41,18 @@
 void _start() __attribute__((weak, alias("module_start")));
 int module_start(SceSize argc, const void *args)
 {
+	ksceDebugPrintf("[MAIN] will alloc 16MiB\n");
 	void* work_buffer = NULL;
+#ifdef USE_TOOL_RAM
+	int mbuid = ksceKernelAllocMemBlock("devdumper_buf", 0x10000000 | 0xF00000 | 0xD000 | 0x6, TEMP_MEMBLOCK_SIZE, NULL);
+#else
 	int mbuid = ksceKernelAllocMemBlock("devdumper_buf", 0x10000000 | 0xC00000 | 0xD000 | 0x6, TEMP_MEMBLOCK_SIZE, NULL);
+#endif
 	ksceKernelGetMemBlockBase(mbuid, (void**)&work_buffer);
-	if (mbuid < 0 || !work_buffer)
+	if (mbuid < 0 || !work_buffer) {
+		ksceDebugPrintf("[MAIN] failed to alloc memblock : 0x%08X | 0x%08X\n", mbuid, work_buffer);
 		return SCE_KERNEL_START_SUCCESS;
+	}
 
 	int ret = -1;
 
