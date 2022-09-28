@@ -31,17 +31,13 @@ void dump_nvs(const char* target_nvs_path, void* work_buf, int ctx) {
             // STEP 1
             sc_pbuf[4] = i;
             ret = ksceSblSmCommCallFunc(ctx, 0xb0002, &resp, sc_pbuf, 0x88);
-            if (ret || resp) {
+            if (ret || resp)
                 ksceDebugPrintf("STEP 1 0x%X r 0x%X rr 0x%X\n", i, ret, resp);
-                goto NVSEXIT;
-            }
 
             // STEP 2
             ret = ksceSysconNvsReadSecureData(sc_pbuf + 0x28, 0x10, sc_pbuf + 0x58, 0x30);
-            if (ret) {
+            if (ret)
                 ksceDebugPrintf("STEP 2 0x%X r 0x%X\n", i, ret);
-                goto NVSEXIT;
-            }
 
             // STEP 3
             sc_pbuf[0] = 1;

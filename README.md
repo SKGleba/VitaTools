@@ -65,7 +65,7 @@ https://user-images.githubusercontent.com/30833773/125276948-220a9480-e311-11eb-
 - Dumps secure xbar, visible keyring, s/nvs, emmc, gc and mc.
 - I have provided a bunch of different prebuilt versions.
 - This kernel module does not require taihen.
-- Tested on firmware 3.65, should work on 3.60-3.74.
+- Tested on firmware 3.00(no f00d mode), 3.60-3.74, should work on 3.60-3.74.
 
 ### [sa0tour0](https://github.com/SKGleba/VitaTools/tree/main/sa0tour0)
 - Redirects sa0 to ur0
