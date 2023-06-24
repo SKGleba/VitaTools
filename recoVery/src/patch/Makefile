@@ -9,6 +9,7 @@ CFLAGS  = -Wl,-q -Wall -O3
 ASFLAGS = $(CFLAGS)
 
 all: e2xrecovr.skprx
+	rm e2xrecovr.elf && rm e2xrecovr.velf && rm kernel.o
 
 e2xrecovr.skprx: e2xrecovr.velf
 	vita-make-fself -c $< $@

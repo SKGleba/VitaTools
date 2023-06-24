@@ -1,6 +1,6 @@
 /* pre-recovery patcher
  *
- * Copyright (C) 2017 molecule, 2020 skgleba
+ * Copyright (C) 2017 molecule, 2020-2023 skgleba
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -9,8 +9,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../patches/hooking.h"
-#include "../../patches/patches.h"
+#include "../../../../plugins/hooking.h"
+#include "../../../../plugins/plugins.h"
 
 static const uint8_t sysstate_ret_patch[] = {0x13, 0x22, 0xc8, 0xf2, 0x01, 0x02};
 
@@ -92,25 +92,25 @@ void _start() __attribute__ ((weak, alias ("module_start")));
 int module_start(uint32_t argc, void *args) {
 	
 	patch_args_struct *patch_args = args;
-    
-    int (*lf)(char* fpath, void* dst, unsigned int sz, int mode) = patch_args->load_file;
+    if (patch_args->this_version != PATCH_ARGS_VERSION)
+        return -1;
 	
     SceObject *obj;
     SceModuleObject *mod;
 	
 	// config / stopfselfs patch
-	obj = get_obj_for_uid(patch_args->uids_b[14]); // SysStateMgr
+	obj = patch_args->kbl_get_obj_for_uid(patch_args->uids_b[14]); // SysStateMgr
     if (obj != NULL) {
 		mod = (SceModuleObject *)&obj->data;
 		DACR_OFF(
 			INSTALL_RET_THUMB(mod->segments[0].buf + 0x1500, 1); // allow sd0:psp2config.skprx
             *(uint32_t*)(mod->segments[0].buf + 0xE28) = 0x20012001;
-			kbl_memcpy(mod->segments[0].buf + 0xD92, sysstate_ret_patch, sizeof(sysstate_ret_patch)); // skip iof ret err
+            patch_args->kbl_memcpy(mod->segments[0].buf + 0xD92, sysstate_ret_patch, sizeof(sysstate_ret_patch)); // skip iof ret err
 		);
     }
 	
 	// fself/hen patch
-    obj = get_obj_for_uid(patch_args->uids_a[9]); // AuthMgr
+    obj = patch_args->kbl_get_obj_for_uid(patch_args->uids_a[9]); // AuthMgr
     if (obj != NULL) {
 		mod = (SceModuleObject *)&obj->data;
 		HOOK_EXPORT(sbl_parse_header, 0x7ABF5135, 0xF3411881);
@@ -119,7 +119,7 @@ int module_start(uint32_t argc, void *args) {
     }
 	
 	// gc-sd compat patches
-	obj = get_obj_for_uid(patch_args->uids_a[0]); // Sysmem
+    obj = patch_args->kbl_get_obj_for_uid(patch_args->uids_a[0]); // Sysmem
     if (obj != NULL) {
 		mod = (SceModuleObject *)&obj->data;
 		DACR_OFF(
@@ -129,7 +129,7 @@ int module_start(uint32_t argc, void *args) {
     }
 	
 	// gc-sd patches - sdroot-as-os0 + sd0 patch
-	obj = get_obj_for_uid(patch_args->uids_a[11]); // iofilemgr
+    obj = patch_args->kbl_get_obj_for_uid(patch_args->uids_a[11]); // iofilemgr
     if (obj != NULL) {
 		mod = (SceModuleObject *)&obj->data;
 		DACR_OFF(
@@ -138,14 +138,15 @@ int module_start(uint32_t argc, void *args) {
     }
     
     // sdif patches for R&W
-    obj = get_obj_for_uid(patch_args->uids_b[7]); // sdif
+    obj = patch_args->kbl_get_obj_for_uid(patch_args->uids_b[7]); // sdif
     if (obj != NULL) {
         mod = (SceModuleObject*)&obj->data;
         HOOK_EXPORT(sdif_read_sector_mmc, 0x96D306FA, 0x6F8D529B);
-        DACR_OFF(
-            sdif_read_sector_mmc = (void *)(mod->segments[0].buf + 0x3e7d); // skip enso's patch
-        );
         HOOK_EXPORT(sdif_write_sector_mmc, 0x96D306FA, 0x175543D2);
+        DACR_OFF( // skip enso's patch
+            sdif_read_sector_mmc = (void*)(mod->segments[0].buf + 0x3e7d);
+            sdif_write_sector_mmc = (void*)(mod->segments[0].buf + 0x42d5);
+        );
         FIND_EXPORT(get_sd_context_part_validate_mmc, 0x96D306FA, 0x6A71987F);
     }
     
@@ -154,19 +155,19 @@ int module_start(uint32_t argc, void *args) {
     optp.attr = 2;
     optp.paddr = 0x1c000000;
 
-    int mblk = sceKernelAllocMemBlock("rcvrlogo", 0x6020D006, 0x200000, &optp);
+    int mblk = patch_args->kbl_alloc_memblock("rcvrlogo", 0x6020D006, 0x200000, &optp);
     void* xbas = NULL;
-    sceKernelGetMemBlockBase(mblk, (void**)&xbas);
+    patch_args->kbl_get_memblock(mblk, (void**)&xbas);
 
     if (xbas == NULL)
         return 0;
 
-    int logoerr = lf("os0:ex/rcvr_logo.raw", xbas, 0x200000, 2);
+    int logoerr = patch_args->ex_get_file("os0:ex/rcvr_logo.raw", xbas, 0x200000, 0);
 
-    sceKernelFreeMemBlock(mblk);
+    patch_args->kbl_free_memblock(mblk);
     
-    if (logoerr == 0) {
-        obj = get_obj_for_uid(patch_args->uids_b[4]);
+    if (logoerr >= 0) {
+        obj = patch_args->kbl_get_obj_for_uid(patch_args->uids_b[4]);
         if (obj != NULL) {
             mod = (SceModuleObject*)&obj->data;
             DACR_OFF(
