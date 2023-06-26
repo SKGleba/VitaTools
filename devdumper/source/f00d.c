@@ -16,6 +16,15 @@ int load_ussm(int* ctx_out) {
   return ksceSblSmCommStartSmFromFile(0, "os0:sm/update_service_sm.self", 0, &NMPsmcomm_ctx, ctx_out);
 }
 
+/*
+int load_ussm(int* ctx_out) {
+  memset(&NMPsmcomm_ctx, 0, sizeof(NMPsmcomm_ctx));
+  memcpy(NMPsmcomm_ctx.data0, NMPctx_130_data, 0x90);
+  NMPsmcomm_ctx.pathId = 2;
+  NMPsmcomm_ctx.self_type = (NMPsmcomm_ctx.self_type & 0xFFFFFFF0) | 2;
+  return ksceSblSmCommStartSmFromFile_167(0, "os0:sm/update_service_sm.self", 0, 0, 0, 0, &NMPsmcomm_ctx, ctx_out);
+}*/
+
 int f00d_dump_nvs(const char* target_nvs_path, void* work_buf) {
   ksceDebugPrintf("allocating commem\n");
   NMPcorridor = NULL;

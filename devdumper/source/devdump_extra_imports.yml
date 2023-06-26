@@ -1,0 +1,19 @@
+modules:
+  SceSblGcAuthMgr:
+    libraries:
+      SceSblGcAuthMgrDrmBBForDriver:
+        kernel: true
+        nid: 0x1926B182
+        functions:
+          ksceGcAuthGetDrmBBKeypair: 0xBB70DDC0
+  SceSblSsSmComm:
+    libraries:
+      SceSblSmCommForKernel:
+        kernel: true
+        nid: 0xCD3C89B6
+        functions:
+          ksceSblSmCommStartSmFromFile_167: 0x992BB9DB
+          ksceSblSmCommCallFunc: 0xDB9FC204
+          ksceSblSmCommStartSmFromData: 0x039C73B1
+          ksceSblSmCommStartSmFromFile: 0x7863A0CC
+          ksceSblSmCommStopSm: 0x0631F8ED
