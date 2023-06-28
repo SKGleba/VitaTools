@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <vitasdkkern.h>
 
+#include "defs.h"
+
 #include "f00d.h"
 #include "nvs.h"
 #include "nmprunner.h"
