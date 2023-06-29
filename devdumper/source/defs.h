@@ -29,7 +29,7 @@
 #define DUMP_MC
 #define MC_OUTPATH "mc.img"
 
-//#define DEV_SLOW_MODE // read device sector-by-sector, ignore read errors
-//#define DEV_SLOW_MODE_RETRY_COUNT 3 // allowed retry count in slow mode
+#define DEV_RETRY_SINGLE_SECTOR // if bulk read fails, read device sector-by-sector, retry on errors
+#define DEV_SINGLE_SECTOR_RETRY_COUNT 3 // allowed retry count in single sector mode
 
 #endif
